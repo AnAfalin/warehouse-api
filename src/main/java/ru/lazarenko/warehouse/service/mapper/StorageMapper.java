@@ -15,6 +15,4 @@ public interface StorageMapper {
 
     List<StorageDto> toStorageDtoList(List<Storage> storages);
 
-    void update(@MappingTarget Storage storage, StorageDto storageDto);
-
 }

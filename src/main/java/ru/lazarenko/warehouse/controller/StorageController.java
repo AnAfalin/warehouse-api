@@ -1,12 +1,10 @@
 package ru.lazarenko.warehouse.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.lazarenko.warehouse.dto.*;
-import ru.lazarenko.warehouse.model.TypeOperation;
 import ru.lazarenko.warehouse.service.StorageService;
 
 import java.util.List;
@@ -42,7 +40,7 @@ public class StorageController {
     @GetMapping("/{storageId}/products")
     public List<ProductDto> getAllProductsByStorage(@RequestParam(required = false, name = "category") String category,
                                                     @PathVariable Integer storageId) {
-        if(!StringUtils.hasLength(category)) {
+        if (!StringUtils.hasLength(category)) {
             return storageService.getAllProductsByStorageId(storageId);
         }
         return storageService.getAllProductsByStorageIdAndCategory(storageId, category);

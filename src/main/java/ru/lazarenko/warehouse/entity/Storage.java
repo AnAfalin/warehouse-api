@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -19,4 +22,6 @@ public class Storage {
     @JoinColumn(name = "region_id", referencedColumnName = "id")
     private Region region;
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "storage")
+    private List<OperationHistory> operationHistories = new ArrayList<>();
 }

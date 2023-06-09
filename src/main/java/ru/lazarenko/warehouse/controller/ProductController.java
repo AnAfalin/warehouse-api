@@ -26,7 +26,7 @@ public class ProductController {
 
     @GetMapping
     public List<ProductDto> getAllProducts(@RequestParam(required = false, name = "category") String category) {
-        if(!StringUtils.hasLength(category)) {
+        if (!StringUtils.hasLength(category)) {
             return productService.getAllProducts();
         }
         return productService.getProductsByCategory(category);

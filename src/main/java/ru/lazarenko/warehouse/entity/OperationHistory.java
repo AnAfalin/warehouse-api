@@ -1,11 +1,16 @@
 package ru.lazarenko.warehouse.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.lazarenko.warehouse.model.TypeOperation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "operation_histories")
 public class OperationHistory {
@@ -13,19 +18,18 @@ public class OperationHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Enumerated(value = EnumType.STRING)
     private TypeOperation operation;
 
-    private Integer startCount;
+    private Integer count;
 
-    private Integer operationCount;
+    private LocalDateTime date;
 
-    private Integer endCount;
-
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private List<Product> products = new ArrayList<>();
+    private Product product;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "storage_id", referencedColumnName = "id")
-    private List<Storage> storages = new ArrayList<>();
+    private Storage storage;
 }

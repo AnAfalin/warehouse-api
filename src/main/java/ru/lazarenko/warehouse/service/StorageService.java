@@ -16,7 +16,6 @@ import ru.lazarenko.warehouse.service.mapper.StorageMapper;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,6 +27,8 @@ public class StorageService {
     private final ItemStorageService itemStorageService;
     private final CategoryService categoryService;
     private final StorageMapper storageMapper;
+    private final OperationHistoryService operationHistoryService;
+    private final ManufactureAnalysisService manufactureAnalysisService;
 
     @Transactional
     public ResponseDto createWarehouse(StorageDto request) {
@@ -70,10 +71,51 @@ public class StorageService {
                     .storage(storage)
                     .count(request.getCount())
                     .build();
+
+            operationHistoryService.saveOperationHistory(request.getCount(), product, storage, TypeOperation.LOADING);
+
             return itemStorageService.createItem(itemStorage);
         }
 
-        return itemStorageService.increaseItemById(optionalItem.get().getId(), request.getCount());
+        ItemStorage item = optionalItem.get();
+
+        int newCount = item.getCount() + request.getCount();
+        operationHistoryService.saveOperationHistory(request.getCount(), product, storage, TypeOperation.LOADING);
+
+        item.setCount(newCount);
+        return itemStorageService.createItem(item);
+    }
+
+    @Transactional
+    public ResponseDto decreaseProductInStorage(ChangingCountItemStorageDto request) {
+        Storage storage = checkExistAndGetStorageById(request.getStorageId());
+        Product product = productService.checkExistAndGetProductById(request.getProductId());
+
+        ItemStorage foundItem = itemStorageService.getItemByProductIdAndStorageId(product.getId(), storage.getId())
+                .orElseThrow(() -> new NoFoundElementException("Product with id='%s' in storage with id='%s' not found"));
+
+        if (request.getCount() <= 0) {
+            throw new ProductCountException("Count '%s' is not correct".formatted(request.getCount()));
+        }
+
+        if (foundItem.getCount() < request.getCount()) {
+            throw new ProductCountException("Count of product with id='%s' less than %s. Actual count of product is %s"
+                    .formatted(foundItem.getProduct().getId(), request.getCount(), foundItem.getCount()));
+        }
+
+        int newCount = foundItem.getCount() - request.getCount();
+
+        operationHistoryService.saveOperationHistory(request.getCount(), product, storage, TypeOperation.SHIPMENT);
+
+        foundItem.setCount(newCount);
+        ItemStorage savedItem = itemStorageService.createItemAndGetSaved(foundItem);
+
+        return ResponseDto.builder()
+                .status(HttpStatus.OK.toString())
+                .message("Total count of product with id='%s' on storage with id='%s': %s"
+                        .formatted(savedItem.getProduct().getId(), savedItem.getStorage().getId(),
+                                savedItem.getCount()))
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -88,18 +130,6 @@ public class StorageService {
         if (foundStorage.isPresent()) {
             throw new NoUniqueObjectException("Storage with name='%s' already exist".formatted(name));
         }
-    }
-
-    @Transactional
-    public ResponseDto decreaseProductInStorage(ChangingCountItemStorageDto request) {
-        checkExistAndGetStorageById(request.getStorageId());
-        productService.checkExistAndGetProductById(request.getProductId());
-
-        if (request.getCount() <= 0) {
-            throw new ProductCountException("Count '%s' is not correct".formatted(request.getCount()));
-        }
-        return itemStorageService.decreaseProductByProductIdAndStorageId(request.getProductId(), request.getStorageId(),
-                request.getCount());
     }
 
     @Transactional(readOnly = true)

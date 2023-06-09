@@ -15,6 +15,4 @@ public interface RegionMapper {
 
     List<RegionDto> toRegionDtoList(List<Region> regions);
 
-    void update(@MappingTarget Region region, RegionDto regionDto);
-
 }
