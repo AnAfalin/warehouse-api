@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import ru.lazarenko.warehouse.model.TypeNeedChange;
+import ru.lazarenko.warehouse.model.ChangeType;
 import ru.lazarenko.warehouse.model.TypeOperation;
 
 @Builder
@@ -21,7 +21,7 @@ public class ManufactureAnalysis {
     private TypeOperation typeOperation;
 
     @Enumerated(value = EnumType.STRING)
-    private TypeNeedChange typeNeedChange;
+    private ChangeType changeType;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "product_id", referencedColumnName = "id")

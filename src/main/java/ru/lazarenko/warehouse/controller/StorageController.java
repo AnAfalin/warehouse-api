@@ -47,10 +47,7 @@ public class StorageController {
     }
 
     @GetMapping("/find")
-    public LoadingShipmentResponse getStorage(@RequestParam(name = "product") Integer productId,
-                                              @RequestParam(name = "region") String region,
-                                              @RequestParam(name = "count") Integer count,
-                                              @RequestParam(name = "type") String typeOperation) {
-        return storageService.findStorageForLoadingOrShipment(productId, region, count, typeOperation);
+    public LoadingShipmentResponse getStorage(LoadingShipmentRequest request) {
+        return storageService.findStorageForLoadingOrShipment(request);
     }
 }

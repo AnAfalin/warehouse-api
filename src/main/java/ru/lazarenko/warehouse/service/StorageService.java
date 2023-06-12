@@ -12,6 +12,7 @@ import ru.lazarenko.warehouse.exception.NoUniqueObjectException;
 import ru.lazarenko.warehouse.exception.ProductCountException;
 import ru.lazarenko.warehouse.model.TypeOperation;
 import ru.lazarenko.warehouse.repository.StorageRepository;
+import ru.lazarenko.warehouse.scheduled.ManufactureAnalysisService;
 import ru.lazarenko.warehouse.service.mapper.StorageMapper;
 
 import java.util.List;
@@ -59,11 +60,15 @@ public class StorageService {
         Storage storage = checkExistAndGetStorageById(request.getStorageId());
         Product product = productService.checkExistAndGetProductById(request.getProductId());
 
-        if (request.getCount() <= 0) {
-            throw new ProductCountException("Count '%s' is not correct".formatted(request.getCount()));
-        }
-
         Optional<ItemStorage> optionalItem = itemStorageService.getItemByProductIdAndStorageId(product.getId(), storage.getId());
+
+        OperationHistoryDto operationHistoryDto = OperationHistoryDto.builder()
+                .product(product)
+                .storage(storage)
+                .count(request.getCount())
+                .operation(TypeOperation.LOADING)
+                .build();
+        operationHistoryService.saveOperationHistory(operationHistoryDto);
 
         if (optionalItem.isEmpty()) {
             ItemStorage itemStorage = ItemStorage.builder()
@@ -72,17 +77,14 @@ public class StorageService {
                     .count(request.getCount())
                     .build();
 
-            operationHistoryService.saveOperationHistory(request.getCount(), product, storage, TypeOperation.LOADING);
-
             return itemStorageService.createItem(itemStorage);
         }
 
         ItemStorage item = optionalItem.get();
 
         int newCount = item.getCount() + request.getCount();
-        operationHistoryService.saveOperationHistory(request.getCount(), product, storage, TypeOperation.LOADING);
-
         item.setCount(newCount);
+
         return itemStorageService.createItem(item);
     }
 
@@ -94,20 +96,22 @@ public class StorageService {
         ItemStorage foundItem = itemStorageService.getItemByProductIdAndStorageId(product.getId(), storage.getId())
                 .orElseThrow(() -> new NoFoundElementException("Product with id='%s' in storage with id='%s' not found"));
 
-        if (request.getCount() <= 0) {
-            throw new ProductCountException("Count '%s' is not correct".formatted(request.getCount()));
-        }
-
         if (foundItem.getCount() < request.getCount()) {
             throw new ProductCountException("Count of product with id='%s' less than %s. Actual count of product is %s"
                     .formatted(foundItem.getProduct().getId(), request.getCount(), foundItem.getCount()));
         }
 
         int newCount = foundItem.getCount() - request.getCount();
-
-        operationHistoryService.saveOperationHistory(request.getCount(), product, storage, TypeOperation.SHIPMENT);
-
         foundItem.setCount(newCount);
+
+        OperationHistoryDto operationHistoryDto = OperationHistoryDto.builder()
+                .product(product)
+                .storage(storage)
+                .count(request.getCount())
+                .operation(TypeOperation.SHIPMENT)
+                .build();
+        operationHistoryService.saveOperationHistory(operationHistoryDto);
+
         ItemStorage savedItem = itemStorageService.createItemAndGetSaved(foundItem);
 
         return ResponseDto.builder()
@@ -148,25 +152,18 @@ public class StorageService {
     }
 
     @Transactional(readOnly = true)
-    public LoadingShipmentResponse findStorageForLoadingOrShipment(Integer productId, String region, Integer count,
-                                                                   String typeOperation)  {
-        Product product = productService.checkExistAndGetProductById(productId);
+    public LoadingShipmentResponse findStorageForLoadingOrShipment(LoadingShipmentRequest request)  {
+        Product product = productService.checkExistAndGetProductById(request.getProductId());
 
-        TypeOperation type;
-        if (typeOperation.equals(TypeOperation.LOADING.name())) {
-            type = TypeOperation.LOADING;
-        } else {
-            type = TypeOperation.SHIPMENT;
-        }
 
-        Optional<Region> optionalRegion = regionService.getWithStoragesByName(region);
+        Optional<Region> optionalRegion = regionService.getWithStoragesByName(request.getRegion());
         if (optionalRegion.isEmpty()) {
             throw new NoFoundElementException("Storage is missing in region %s. %s is not possible.".
-                    formatted(region, type.name()));
+                    formatted(request.getRegion(), request.getType().name()));
         }
 
         List<StorageDto> storageDtos;
-        if (type.equals(TypeOperation.LOADING)) {
+        if (request.getType().equals(TypeOperation.LOADING)) {
             storageDtos = storageMapper.toStorageDtoList(optionalRegion.get().getStorages());
             return LoadingShipmentResponse.builder()
                     .storages(storageDtos)
@@ -174,13 +171,11 @@ public class StorageService {
         }
 
         List<Storage> storageForShipment = itemStorageService.findStorageForShipment(product.getId(),
-                optionalRegion.get().getId(), count);
+                optionalRegion.get().getId(), request.getCount());
         storageDtos = storageMapper.toStorageDtoList(storageForShipment);
         return LoadingShipmentResponse.builder()
                 .storages(storageDtos)
                 .build();
 
-
     }
-
 }
