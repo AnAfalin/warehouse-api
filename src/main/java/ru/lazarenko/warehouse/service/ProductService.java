@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.lazarenko.warehouse.dto.PriceRangeDto;
-import ru.lazarenko.warehouse.dto.ProductDto;
-import ru.lazarenko.warehouse.dto.ResponseDto;
+import ru.lazarenko.warehouse.dto.product.PriceRangeDto;
+import ru.lazarenko.warehouse.dto.product.ProductDto;
+import ru.lazarenko.warehouse.dto.info.ResponseDto;
 import ru.lazarenko.warehouse.entity.Category;
 import ru.lazarenko.warehouse.entity.Product;
 import ru.lazarenko.warehouse.exception.NoFoundElementException;
@@ -35,7 +35,7 @@ public class ProductService {
         log.info("Product successful created: {}", savedProduct);
 
         return ResponseDto.builder()
-                .status(HttpStatus.CREATED.toString())
+                .status(HttpStatus.CREATED.name())
                 .message("Product successful created: id='%s'".formatted(savedProduct.getId()))
                 .build();
     }

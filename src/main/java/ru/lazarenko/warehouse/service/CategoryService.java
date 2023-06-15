@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lazarenko.warehouse.dto.CategoryDto;
-import ru.lazarenko.warehouse.dto.ResponseDto;
+import ru.lazarenko.warehouse.dto.info.ResponseDto;
 import ru.lazarenko.warehouse.entity.Category;
 import ru.lazarenko.warehouse.exception.NoFoundElementException;
 import ru.lazarenko.warehouse.exception.NoUniqueObjectException;
@@ -32,7 +32,7 @@ public class CategoryService {
 
         log.error("Category successful created: {}", savedCategory);
         return ResponseDto.builder()
-                .status(HttpStatus.CREATED.toString())
+                .status(HttpStatus.CREATED.name())
                 .message("Category successful created: id='%s'".formatted(savedCategory.getId()))
                 .build();
     }

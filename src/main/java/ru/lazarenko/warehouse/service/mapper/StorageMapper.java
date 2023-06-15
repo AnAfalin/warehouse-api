@@ -1,8 +1,7 @@
 package ru.lazarenko.warehouse.service.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import ru.lazarenko.warehouse.dto.StorageDto;
+import ru.lazarenko.warehouse.dto.storage.StorageDto;
 import ru.lazarenko.warehouse.entity.Storage;
 
 import java.util.List;

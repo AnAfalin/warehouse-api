@@ -1,20 +1,22 @@
 package ru.lazarenko.warehouse.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import ru.lazarenko.warehouse.dto.PriceRangeDto;
-import ru.lazarenko.warehouse.dto.ProductDto;
-import ru.lazarenko.warehouse.dto.ResponseDto;
+import ru.lazarenko.warehouse.dto.info.ResponseDto;
+import ru.lazarenko.warehouse.dto.product.PriceRangeDto;
+import ru.lazarenko.warehouse.dto.product.ProductDto;
 import ru.lazarenko.warehouse.service.ProductService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@PreAuthorize("hasRole('ROLE_USER')")
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;

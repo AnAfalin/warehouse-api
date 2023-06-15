@@ -1,9 +1,10 @@
-package ru.lazarenko.warehouse.dto;
+package ru.lazarenko.warehouse.dto.storage;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import ru.lazarenko.warehouse.model.TypeOperation;
+
+import javax.validation.constraints.*;
 
 @Getter
 @Setter

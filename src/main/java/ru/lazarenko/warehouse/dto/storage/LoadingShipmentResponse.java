@@ -1,15 +1,16 @@
-package ru.lazarenko.warehouse.dto;
+package ru.lazarenko.warehouse.dto.storage;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-public class ResponseDto {
-    private String status;
-    private String message;
+public class LoadingShipmentResponse {
+    private List<StorageDto> storages;
 }

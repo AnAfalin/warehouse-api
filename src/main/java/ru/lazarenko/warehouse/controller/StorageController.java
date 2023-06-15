@@ -2,9 +2,15 @@ package ru.lazarenko.warehouse.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import ru.lazarenko.warehouse.dto.*;
+import ru.lazarenko.warehouse.dto.info.ResponseDto;
+import ru.lazarenko.warehouse.dto.product.ProductDto;
+import ru.lazarenko.warehouse.dto.storage.ChangeItemStorageRequest;
+import ru.lazarenko.warehouse.dto.storage.LoadingShipmentRequest;
+import ru.lazarenko.warehouse.dto.storage.LoadingShipmentResponse;
+import ru.lazarenko.warehouse.dto.storage.StorageDto;
 import ru.lazarenko.warehouse.service.StorageService;
 
 import java.util.List;
@@ -12,28 +18,29 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@PreAuthorize("hasRole('ROLE_USER')")
 @RequestMapping("/api/storages")
 public class StorageController {
     private final StorageService storageService;
 
     @PostMapping
-    public ResponseDto addWarehouse(@RequestBody StorageDto request) {
+    public ResponseDto addStorage(@RequestBody StorageDto request) {
         log.info("Request for create warehouse");
         return storageService.createWarehouse(request);
     }
 
     @GetMapping
-    public List<StorageDto> getALlWarehouse() {
+    public List<StorageDto> getAllStorages() {
         return storageService.getAllWarehouse();
     }
 
     @PostMapping("/add-product")
-    public ResponseDto addProductToStorage(@RequestBody ChangingCountItemStorageDto request) {
+    public ResponseDto addProductToStorage(@RequestBody ChangeItemStorageRequest request) {
         return storageService.increaseProductInStorage(request);
     }
 
     @PostMapping("/decrease-product")
-    public ResponseDto decreaseProductToStorage(@RequestBody ChangingCountItemStorageDto request) {
+    public ResponseDto decreaseProductToStorage(@RequestBody ChangeItemStorageRequest request) {
         return storageService.decreaseProductInStorage(request);
     }
 

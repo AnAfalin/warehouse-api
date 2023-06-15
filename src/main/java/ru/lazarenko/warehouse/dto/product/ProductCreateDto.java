@@ -1,10 +1,11 @@
-package ru.lazarenko.warehouse.dto;
+package ru.lazarenko.warehouse.dto.product;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import ru.lazarenko.warehouse.dto.CategoryDto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Getter

@@ -2,7 +2,6 @@ package ru.lazarenko.warehouse.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,12 +21,12 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatusCode status,
+                                                                  HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
         Map<String, Object> response = new LinkedHashMap<>();
 
         response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        response.put("status", HttpStatus.NOT_FOUND.name());
+        response.put("status", HttpStatus.BAD_REQUEST.name());
 
         Map<String, Object> errors = new LinkedHashMap<>();
         ex.getBindingResult()

@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lazarenko.warehouse.dto.RegionDto;
-import ru.lazarenko.warehouse.dto.ResponseDto;
+import ru.lazarenko.warehouse.dto.info.ResponseDto;
 import ru.lazarenko.warehouse.entity.Region;
 import ru.lazarenko.warehouse.exception.NoUniqueObjectException;
 import ru.lazarenko.warehouse.repository.RegionRepository;
@@ -31,7 +31,7 @@ public class RegionService {
 
         log.error("Region successful created: {}", savedRegion);
         return ResponseDto.builder()
-                .status(HttpStatus.CREATED.toString())
+                .status(HttpStatus.CREATED.name())
                 .message("Region successful created: id='%s'".formatted(savedRegion.getId()))
                 .build();
     }

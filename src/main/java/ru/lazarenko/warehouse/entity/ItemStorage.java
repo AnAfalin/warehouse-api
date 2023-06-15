@@ -1,6 +1,6 @@
 package ru.lazarenko.warehouse.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 @Getter

@@ -1,8 +1,5 @@
 package ru.lazarenko.warehouse.dto;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 import ru.lazarenko.warehouse.entity.Product;
 import ru.lazarenko.warehouse.entity.Storage;

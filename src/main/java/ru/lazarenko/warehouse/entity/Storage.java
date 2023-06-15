@@ -1,6 +1,6 @@
 package ru.lazarenko.warehouse.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,4 +24,7 @@ public class Storage {
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "storage")
     private List<OperationHistory> operationHistories = new ArrayList<>();
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "storage")
+    private List<ItemStorage> itemStorages = new ArrayList<>();
 }

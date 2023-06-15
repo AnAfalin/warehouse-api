@@ -1,13 +1,13 @@
-package ru.lazarenko.warehouse.dto;
+package ru.lazarenko.warehouse.dto.storage;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.*;
+
 @Getter
 @Setter
-public class ChangingCountItemStorageDto {
+public class ChangeItemStorageRequest {
     @NotNull(message = "Product id cannot null")
     private Integer productId;
 

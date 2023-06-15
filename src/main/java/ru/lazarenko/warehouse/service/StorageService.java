@@ -6,13 +6,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lazarenko.warehouse.dto.*;
+import ru.lazarenko.warehouse.dto.info.ResponseDto;
+import ru.lazarenko.warehouse.dto.product.ProductDto;
+import ru.lazarenko.warehouse.dto.storage.ChangeItemStorageRequest;
+import ru.lazarenko.warehouse.dto.storage.LoadingShipmentRequest;
+import ru.lazarenko.warehouse.dto.storage.LoadingShipmentResponse;
+import ru.lazarenko.warehouse.dto.storage.StorageDto;
 import ru.lazarenko.warehouse.entity.*;
 import ru.lazarenko.warehouse.exception.NoFoundElementException;
 import ru.lazarenko.warehouse.exception.NoUniqueObjectException;
 import ru.lazarenko.warehouse.exception.ProductCountException;
 import ru.lazarenko.warehouse.model.TypeOperation;
 import ru.lazarenko.warehouse.repository.StorageRepository;
-import ru.lazarenko.warehouse.scheduled.ManufactureAnalysisService;
 import ru.lazarenko.warehouse.service.mapper.StorageMapper;
 
 import java.util.List;
@@ -29,7 +34,6 @@ public class StorageService {
     private final CategoryService categoryService;
     private final StorageMapper storageMapper;
     private final OperationHistoryService operationHistoryService;
-    private final ManufactureAnalysisService manufactureAnalysisService;
 
     @Transactional
     public ResponseDto createWarehouse(StorageDto request) {
@@ -43,7 +47,7 @@ public class StorageService {
         Storage savedStorage = storageRepository.save(storage);
 
         return ResponseDto.builder()
-                .status(HttpStatus.CREATED.toString())
+                .status(HttpStatus.CREATED.name())
                 .message("Storage successful created: id='%s'".formatted(savedStorage.getId()))
                 .build();
     }
@@ -56,7 +60,7 @@ public class StorageService {
     }
 
     @Transactional
-    public ResponseDto increaseProductInStorage(ChangingCountItemStorageDto request) {
+    public ResponseDto increaseProductInStorage(ChangeItemStorageRequest request) {
         Storage storage = checkExistAndGetStorageById(request.getStorageId());
         Product product = productService.checkExistAndGetProductById(request.getProductId());
 
@@ -89,7 +93,7 @@ public class StorageService {
     }
 
     @Transactional
-    public ResponseDto decreaseProductInStorage(ChangingCountItemStorageDto request) {
+    public ResponseDto decreaseProductInStorage(ChangeItemStorageRequest request) {
         Storage storage = checkExistAndGetStorageById(request.getStorageId());
         Product product = productService.checkExistAndGetProductById(request.getProductId());
 
