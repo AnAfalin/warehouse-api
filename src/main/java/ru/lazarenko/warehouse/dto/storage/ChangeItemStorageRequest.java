@@ -1,12 +1,14 @@
 package ru.lazarenko.warehouse.dto.storage;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChangeItemStorageRequest {
     @NotNull(message = "Product id cannot null")
     private Integer productId;
@@ -14,6 +16,7 @@ public class ChangeItemStorageRequest {
     @NotNull(message = "Storage id cannot null")
     private Integer storageId;
 
-    @Min(value = 0, message = "Count cannot less than 1")
+    @NotNull(message = "Count cannot null")
+    @Min(value = 0, message = "Count cannot less than 0")
     private Integer count;
 }

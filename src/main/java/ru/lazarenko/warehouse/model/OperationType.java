@@ -1,6 +1,6 @@
 package ru.lazarenko.warehouse.model;
 
-public enum TypeOperation {
+public enum OperationType {
     LOADING,
     SHIPMENT
 }

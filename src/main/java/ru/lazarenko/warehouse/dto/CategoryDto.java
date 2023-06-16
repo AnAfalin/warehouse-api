@@ -13,6 +13,6 @@ import javax.validation.constraints.NotBlank;
 public class CategoryDto {
     private Integer id;
 
-    @NotBlank(message = "Name cannot be empty or null")
+    @NotBlank(message = "Category name cannot be empty or null")
     private String name;
 }

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.lazarenko.warehouse.dto.RegionDto;
 import ru.lazarenko.warehouse.dto.info.ResponseDto;
 import ru.lazarenko.warehouse.entity.Region;
+import ru.lazarenko.warehouse.exception.NoFoundElementException;
 import ru.lazarenko.warehouse.exception.NoUniqueObjectException;
 import ru.lazarenko.warehouse.repository.RegionRepository;
 import ru.lazarenko.warehouse.service.mapper.RegionMapper;
@@ -45,7 +46,7 @@ public class RegionService {
     @Transactional(readOnly = true)
     public Region checkExistAndGetRegionByName(String name) {
         return regionRepository.findByName(name)
-                .orElseThrow(() -> new NoUniqueObjectException("Region with name='%s' already exist".formatted(name)));
+                .orElseThrow(() -> new NoFoundElementException("Region with name='%s' not found".formatted(name)));
     }
 
     @Transactional(readOnly = true)

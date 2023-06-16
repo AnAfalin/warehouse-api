@@ -14,6 +14,7 @@ import ru.lazarenko.warehouse.exception.NoFoundElementException;
 import ru.lazarenko.warehouse.repository.ProductRepository;
 import ru.lazarenko.warehouse.service.mapper.ProductMapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -62,7 +63,8 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductDto> getProductsByPriceRange(PriceRangeDto request) {
-        List<Product> products = productRepository.findProductsByMinAndMaxPrice(request.getMin(), request.getMax());
+        List<Product> products = productRepository
+                .findProductsByMinAndMaxPrice(new BigDecimal(request.getMin()), new BigDecimal(request.getMax()));
         return productMapper.toProductDtoList(products);
     }
 }

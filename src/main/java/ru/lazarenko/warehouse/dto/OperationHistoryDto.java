@@ -3,7 +3,7 @@ package ru.lazarenko.warehouse.dto;
 import lombok.*;
 import ru.lazarenko.warehouse.entity.Product;
 import ru.lazarenko.warehouse.entity.Storage;
-import ru.lazarenko.warehouse.model.TypeOperation;
+import ru.lazarenko.warehouse.model.OperationType;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OperationHistoryDto {
-    private TypeOperation operation;
+    private OperationType operation;
 
     private Integer count;
 

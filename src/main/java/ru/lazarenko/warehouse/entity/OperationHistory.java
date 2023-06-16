@@ -4,7 +4,7 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.lazarenko.warehouse.model.TypeOperation;
+import ru.lazarenko.warehouse.model.OperationType;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +19,7 @@ public class OperationHistory {
     private Integer id;
 
     @Enumerated(value = EnumType.STRING)
-    private TypeOperation operation;
+    private OperationType operation;
 
     private Integer count;
 

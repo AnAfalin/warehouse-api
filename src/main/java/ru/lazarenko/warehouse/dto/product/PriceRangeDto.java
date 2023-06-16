@@ -1,13 +1,15 @@
 package ru.lazarenko.warehouse.dto.product;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PriceRangeDto {
 
     @NotNull(message = "Min price cannot be null")

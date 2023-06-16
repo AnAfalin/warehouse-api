@@ -1,7 +1,6 @@
 package ru.lazarenko.warehouse.dto.product;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.lazarenko.warehouse.dto.CategoryDto;
 
 import javax.validation.Valid;
@@ -11,15 +10,19 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDto {
     private Integer id;
 
-    @NotBlank(message = "Name cannot be empty or null")
+    @NotBlank(message = "Product name cannot be empty or null")
     private String name;
 
     @NotNull(message = "Price cannot be null")
-    private BigDecimal price = new BigDecimal(0);
+    private BigDecimal price;
 
     @Valid
+    @NotNull(message = "Category cannot be null")
     private CategoryDto category;
 }

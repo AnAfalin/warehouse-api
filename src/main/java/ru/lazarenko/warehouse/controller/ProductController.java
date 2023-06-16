@@ -35,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/search-in-price")
-    public List<ProductDto> getProductsInPriceRange(@RequestBody @Valid PriceRangeDto request) {
+    public List<ProductDto> getProductsInPriceRange(@Valid PriceRangeDto request) {
         return productService.getProductsByPriceRange(request);
     }
 

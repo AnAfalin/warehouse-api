@@ -1,11 +1,12 @@
 package ru.lazarenko.warehouse.entity;
 
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import ru.lazarenko.warehouse.model.ChangeType;
-import ru.lazarenko.warehouse.model.TypeOperation;
+import ru.lazarenko.warehouse.model.OperationType;
+
+import javax.persistence.*;
 
 @Builder
 @NoArgsConstructor
@@ -18,7 +19,7 @@ public class ManufactureAnalysis {
     private Integer id;
 
     @Enumerated(value = EnumType.STRING)
-    private TypeOperation typeOperation;
+    private OperationType operation;
 
     @Enumerated(value = EnumType.STRING)
     private ChangeType changeType;

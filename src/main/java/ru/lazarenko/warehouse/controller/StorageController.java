@@ -13,6 +13,7 @@ import ru.lazarenko.warehouse.dto.storage.LoadingShipmentResponse;
 import ru.lazarenko.warehouse.dto.storage.StorageDto;
 import ru.lazarenko.warehouse.service.StorageService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -24,23 +25,23 @@ public class StorageController {
     private final StorageService storageService;
 
     @PostMapping
-    public ResponseDto addStorage(@RequestBody StorageDto request) {
+    public ResponseDto addStorage(@RequestBody @Valid StorageDto request) {
         log.info("Request for create warehouse");
-        return storageService.createWarehouse(request);
+        return storageService.createStorage(request);
     }
 
     @GetMapping
     public List<StorageDto> getAllStorages() {
-        return storageService.getAllWarehouse();
+        return storageService.getAllStorages();
     }
 
     @PostMapping("/add-product")
-    public ResponseDto addProductToStorage(@RequestBody ChangeItemStorageRequest request) {
+    public ResponseDto addProductToStorage(@RequestBody @Valid ChangeItemStorageRequest request) {
         return storageService.increaseProductInStorage(request);
     }
 
     @PostMapping("/decrease-product")
-    public ResponseDto decreaseProductToStorage(@RequestBody ChangeItemStorageRequest request) {
+    public ResponseDto decreaseProductToStorage(@RequestBody @Valid ChangeItemStorageRequest request) {
         return storageService.decreaseProductInStorage(request);
     }
 
@@ -54,7 +55,7 @@ public class StorageController {
     }
 
     @GetMapping("/find")
-    public LoadingShipmentResponse getStorage(LoadingShipmentRequest request) {
+    public LoadingShipmentResponse getStorageForLoadingShipment(LoadingShipmentRequest request) {
         return storageService.findStorageForLoadingOrShipment(request);
     }
 }

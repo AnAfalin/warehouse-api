@@ -10,7 +10,7 @@ import ru.lazarenko.warehouse.entity.OperationHistory;
 import ru.lazarenko.warehouse.entity.Product;
 import ru.lazarenko.warehouse.entity.Storage;
 import ru.lazarenko.warehouse.model.ChangeType;
-import ru.lazarenko.warehouse.model.TypeOperation;
+import ru.lazarenko.warehouse.model.OperationType;
 import ru.lazarenko.warehouse.repository.ManufactureAnalysisRepository;
 import ru.lazarenko.warehouse.repository.OperationHistoryRepository;
 
@@ -79,7 +79,7 @@ public class ManufactureAnalysisService {
         return data.stream()
                 .filter(el -> el.getProduct().getId().equals(product.getId())
                         && el.getStorage().getId().equals(storage.getId())
-                        && el.getOperation().equals(TypeOperation.LOADING))
+                        && el.getOperation().equals(OperationType.LOADING))
                 .mapToInt(OperationHistory::getCount).sum();
     }
 
@@ -87,7 +87,7 @@ public class ManufactureAnalysisService {
         return data.stream()
                 .filter(el -> el.getProduct().getId().equals(product.getId())
                         && el.getStorage().getId().equals(storage.getId())
-                        && el.getOperation().equals(TypeOperation.SHIPMENT))
+                        && el.getOperation().equals(OperationType.SHIPMENT))
                 .mapToInt(OperationHistory::getCount).sum();
     }
 
@@ -96,7 +96,7 @@ public class ManufactureAnalysisService {
         ManufactureAnalysis notice = ManufactureAnalysis.builder()
                 .product(product)
                 .storage(storage)
-                .typeOperation(TypeOperation.LOADING)
+                .operation(OperationType.LOADING)
                 .changeType(ChangeType.DECREASE)
                 .build();
         result.add(notice);
@@ -106,7 +106,7 @@ public class ManufactureAnalysisService {
         ManufactureAnalysis notice = ManufactureAnalysis.builder()
                 .product(product)
                 .storage(storage)
-                .typeOperation(TypeOperation.LOADING)
+                .operation(OperationType.LOADING)
                 .changeType(ChangeType.INCREASE)
                 .build();
         result.add(notice);

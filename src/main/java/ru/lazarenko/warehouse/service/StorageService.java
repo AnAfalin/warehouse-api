@@ -16,7 +16,7 @@ import ru.lazarenko.warehouse.entity.*;
 import ru.lazarenko.warehouse.exception.NoFoundElementException;
 import ru.lazarenko.warehouse.exception.NoUniqueObjectException;
 import ru.lazarenko.warehouse.exception.ProductCountException;
-import ru.lazarenko.warehouse.model.TypeOperation;
+import ru.lazarenko.warehouse.model.OperationType;
 import ru.lazarenko.warehouse.repository.StorageRepository;
 import ru.lazarenko.warehouse.service.mapper.StorageMapper;
 
@@ -36,7 +36,7 @@ public class StorageService {
     private final OperationHistoryService operationHistoryService;
 
     @Transactional
-    public ResponseDto createWarehouse(StorageDto request) {
+    public ResponseDto createStorage(StorageDto request) {
         Storage storage = storageMapper.toStorage(request);
 
         checkUniqueName(request.getName());
@@ -53,7 +53,7 @@ public class StorageService {
     }
 
     @Transactional(readOnly = true)
-    public List<StorageDto> getAllWarehouse() {
+    public List<StorageDto> getAllStorages() {
         List<Storage> storages = storageRepository.findAll();
 
         return storageMapper.toStorageDtoList(storages);
@@ -70,7 +70,7 @@ public class StorageService {
                 .product(product)
                 .storage(storage)
                 .count(request.getCount())
-                .operation(TypeOperation.LOADING)
+                .operation(OperationType.LOADING)
                 .build();
         operationHistoryService.saveOperationHistory(operationHistoryDto);
 
@@ -112,14 +112,14 @@ public class StorageService {
                 .product(product)
                 .storage(storage)
                 .count(request.getCount())
-                .operation(TypeOperation.SHIPMENT)
+                .operation(OperationType.SHIPMENT)
                 .build();
         operationHistoryService.saveOperationHistory(operationHistoryDto);
 
         ItemStorage savedItem = itemStorageService.createItemAndGetSaved(foundItem);
 
         return ResponseDto.builder()
-                .status(HttpStatus.OK.toString())
+                .status(HttpStatus.OK.name())
                 .message("Total count of product with id='%s' on storage with id='%s': %s"
                         .formatted(savedItem.getProduct().getId(), savedItem.getStorage().getId(),
                                 savedItem.getCount()))
@@ -167,7 +167,7 @@ public class StorageService {
         }
 
         List<StorageDto> storageDtos;
-        if (request.getType().equals(TypeOperation.LOADING)) {
+        if (request.getType().equals(OperationType.LOADING)) {
             storageDtos = storageMapper.toStorageDtoList(optionalRegion.get().getStorages());
             return LoadingShipmentResponse.builder()
                     .storages(storageDtos)

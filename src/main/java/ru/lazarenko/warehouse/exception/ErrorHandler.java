@@ -51,8 +51,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler(value = {NoUniqueObjectException.class})
-    public ResponseEntity<Object> handleNoUniqueObjectException(final NoUniqueObjectException ex) {
+    @ExceptionHandler(value = {NoUniqueObjectException.class, UserEmailExistException.class})
+    public ResponseEntity<Object> handleNoUniqueObjectException(final RuntimeException ex) {
         Map<String, Object> response = new LinkedHashMap<>();
 
         response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

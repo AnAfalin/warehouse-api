@@ -32,7 +32,7 @@ public class ItemStorageService {
     public ResponseDto createItem(ItemStorage itemStorage) {
         ItemStorage savedItem = itemStorageRepository.save(itemStorage);
         return ResponseDto.builder()
-                .status(HttpStatus.OK.toString())
+                .status(HttpStatus.CREATED.name())
                 .message("Total count of product with id='%s' on storage with id='%s': %s"
                         .formatted(savedItem.getProduct().getId(), savedItem.getStorage().getId(),
                                 savedItem.getCount()))
