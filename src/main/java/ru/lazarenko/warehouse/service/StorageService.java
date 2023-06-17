@@ -154,32 +154,4 @@ public class StorageService {
 
         return itemStorageService.getProductsByStorageIdAndCategory(storage.getId(), foundCategory.getName());
     }
-
-    @Transactional(readOnly = true)
-    public LoadingShipmentResponse findStorageForLoadingOrShipment(LoadingShipmentRequest request)  {
-        Product product = productService.checkExistAndGetProductById(request.getProductId());
-
-
-        Optional<Region> optionalRegion = regionService.getWithStoragesByName(request.getRegion());
-        if (optionalRegion.isEmpty()) {
-            throw new NoFoundElementException("Storage is missing in region %s. %s is not possible.".
-                    formatted(request.getRegion(), request.getType().name()));
-        }
-
-        List<StorageDto> storageDtos;
-        if (request.getType().equals(OperationType.LOADING)) {
-            storageDtos = storageMapper.toStorageDtoList(optionalRegion.get().getStorages());
-            return LoadingShipmentResponse.builder()
-                    .storages(storageDtos)
-                    .build();
-        }
-
-        List<Storage> storageForShipment = itemStorageService.findStorageForShipment(product.getId(),
-                optionalRegion.get().getId(), request.getCount());
-        storageDtos = storageMapper.toStorageDtoList(storageForShipment);
-        return LoadingShipmentResponse.builder()
-                .storages(storageDtos)
-                .build();
-
-    }
 }

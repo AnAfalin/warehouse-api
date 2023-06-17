@@ -14,16 +14,17 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@PreAuthorize("hasRole('ROLE_USER')")
 @RequestMapping("/api/regions")
 public class RegionController {
     private final RegionService regionService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseDto addRegion(@RequestBody @Valid RegionDto request) {
         return regionService.createRegion(request);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping
     public List<RegionDto> getAllRegions() {
         return regionService.getAllRegions();

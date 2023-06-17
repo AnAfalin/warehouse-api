@@ -32,7 +32,7 @@ public class DataInitializer {
         roleAdmin.setName(UserRole.ADMIN);
 
         Role roleUser = new Role();
-        roleUser.setName(UserRole.USER);
+        roleUser.setName(UserRole.MANAGER);
 
         if (userRepository.findByUsername(USERNAME).isPresent()) {
             return;

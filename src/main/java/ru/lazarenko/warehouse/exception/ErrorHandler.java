@@ -51,7 +51,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler(value = {NoUniqueObjectException.class, UserEmailExistException.class})
+    @ExceptionHandler(value = {NoUniqueObjectException.class, UserUsernameExistException.class})
     public ResponseEntity<Object> handleNoUniqueObjectException(final RuntimeException ex) {
         Map<String, Object> response = new LinkedHashMap<>();
 

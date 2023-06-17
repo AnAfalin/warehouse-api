@@ -57,5 +57,4 @@ public class CategoryService {
         return categoryRepository.findByName(name)
                 .orElseThrow(() -> new NoFoundElementException("Category with name='%s' not found".formatted(name)));
     }
-
 }

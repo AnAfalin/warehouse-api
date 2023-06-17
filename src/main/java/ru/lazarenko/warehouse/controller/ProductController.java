@@ -16,16 +16,17 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@PreAuthorize("hasRole('ROLE_USER')")
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseDto addProduct(@RequestBody @Valid ProductDto request) {
         return productService.createProduct(request);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping
     public List<ProductDto> getAllProducts(@RequestParam(required = false, name = "category") String category) {
         if (!StringUtils.hasLength(category)) {
@@ -34,6 +35,7 @@ public class ProductController {
         return productService.getProductsByCategory(category);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/search-in-price")
     public List<ProductDto> getProductsInPriceRange(@Valid PriceRangeDto request) {
         return productService.getProductsByPriceRange(request);

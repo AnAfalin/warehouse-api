@@ -15,15 +15,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/categories")
-@PreAuthorize("hasRole('ROLE_USER')")
 public class CategoryController {
     private final CategoryService categoryService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseDto addCategory(@RequestBody @Valid CategoryDto request) {
         return categoryService.createCategory(request);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping
     public List<CategoryDto> getAllCategories() {
         return categoryService.getAllCategories();

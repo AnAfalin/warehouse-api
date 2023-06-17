@@ -50,7 +50,7 @@ public class RegionService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Region> getById(Integer id) {
+    public Optional<Region> getRegionById(Integer id) {
         return regionRepository.findById(id);
     }
 
@@ -64,8 +64,7 @@ public class RegionService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Region> getWithStoragesByName(String name) {
+    public Optional<Region> getRegionWithStoragesByName(String name) {
         return regionRepository.findWithStoragesByName(name);
     }
-
 }
