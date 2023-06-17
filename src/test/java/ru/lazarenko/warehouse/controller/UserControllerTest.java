@@ -14,7 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.lazarenko.warehouse.dto.registration.UserRegisterRequest;
 import ru.lazarenko.warehouse.dto.registration.UserRegisterResponse;
-import ru.lazarenko.warehouse.exception.UserEmailExistException;
+import ru.lazarenko.warehouse.exception.UserUsernameExistException;
 import ru.lazarenko.warehouse.service.UserService;
 
 import javax.validation.ConstraintViolation;
@@ -204,7 +204,8 @@ class UserControllerTest {
                 .password("password123")
                 .build();
 
-        doThrow(new UserEmailExistException("User with username = '%s' already exist".formatted(request.getUsername())))
+        doThrow(new UserUsernameExistException("User with username = '%s' already exist"
+                .formatted(request.getUsername())))
                 .when(userService)
                 .registerUser(any(UserRegisterRequest.class));
 

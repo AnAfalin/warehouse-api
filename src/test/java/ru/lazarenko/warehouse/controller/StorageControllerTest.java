@@ -23,6 +23,7 @@ import ru.lazarenko.warehouse.dto.storage.StorageDto;
 import ru.lazarenko.warehouse.entity.Product;
 import ru.lazarenko.warehouse.exception.NoFoundElementException;
 import ru.lazarenko.warehouse.model.OperationType;
+import ru.lazarenko.warehouse.service.ItemStorageService;
 import ru.lazarenko.warehouse.service.StorageService;
 
 import javax.validation.ConstraintViolation;
@@ -52,6 +53,9 @@ class StorageControllerTest {
 
     @MockBean
     StorageService storageService;
+
+    @MockBean
+    ItemStorageService itemStorageService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -276,7 +280,6 @@ class StorageControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Storage has been added successfully"));
-        ;
     }
 
     @Test
@@ -600,7 +603,7 @@ class StorageControllerTest {
                 .storages(List.of(storage))
                 .build();
 
-        when(storageService.findStorageForLoadingOrShipment(any(LoadingShipmentRequest.class)))
+        when(itemStorageService.findStorageForLoadingOrShipment(any(LoadingShipmentRequest.class)))
                 .thenReturn(response);
 
         mvc.perform(get("/api/storages/find")
@@ -626,7 +629,7 @@ class StorageControllerTest {
                 .storages(List.of())
                 .build();
 
-        when(storageService.findStorageForLoadingOrShipment(any(LoadingShipmentRequest.class)))
+        when(itemStorageService.findStorageForLoadingOrShipment(any(LoadingShipmentRequest.class)))
                 .thenReturn(response);
 
         mvc.perform(get("/api/storages/find")
@@ -647,7 +650,7 @@ class StorageControllerTest {
     @DisplayName("get storage for loading or shipment | status is ok and empty result list | storage and product exist")
     void getStorageForLoadingShipment_statusNotFound_storageOrProductsDoNotExist() throws Exception {
         doThrow(NoFoundElementException.class)
-                .when(storageService)
+                .when(itemStorageService)
                 .findStorageForLoadingOrShipment(any(LoadingShipmentRequest.class));
 
         mvc.perform(get("/api/storages/find")

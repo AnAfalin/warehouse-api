@@ -10,3 +10,13 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+
+jwt:
+  secret: "d2FyZWhvdXNlX3NlY29uZF9wcm9qZWN0X29mX215X0pBVkFfc3R1ZHlfMjAyMl8yMDIz"
+  access-token-expiration-ms: 600 000
+  refresh-token-expiration-ms: 3 600 000
+
+my:
+  scheduler:
+    interval: 3
+    period-report-analyses: 3
