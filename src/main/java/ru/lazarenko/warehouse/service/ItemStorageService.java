@@ -41,6 +41,10 @@ public class ItemStorageService {
     @Transactional
     public ResponseDto createItem(ItemStorage itemStorage) {
         ItemStorage savedItem = itemStorageRepository.save(itemStorage);
+
+        log.info("Total count of product with id='{}' on storage with id='{}': {}",
+                savedItem.getProduct().getId(), savedItem.getStorage().getId(), savedItem.getCount());
+
         return ResponseDto.builder()
                 .status(HttpStatus.CREATED.name())
                 .message("Total count of product with id='%s' on storage with id='%s': %s"
@@ -68,8 +72,11 @@ public class ItemStorageService {
     }
 
     @Transactional
-    public ItemStorage createItemAndGetSaved(ItemStorage item) {
-        return itemStorageRepository.save(item);
+    public ItemStorage updateItemAndGetSaved(ItemStorage item) {
+        ItemStorage savedItem = itemStorageRepository.save(item);
+        log.info("Item of storage successfully created: {}", savedItem);
+
+        return savedItem;
     }
 
     @Transactional(readOnly = true)

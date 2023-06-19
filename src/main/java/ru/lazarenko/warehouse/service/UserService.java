@@ -1,10 +1,12 @@
 package ru.lazarenko.warehouse.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.lazarenko.warehouse.dto.UserDto;
 import ru.lazarenko.warehouse.dto.registration.UserRegisterRequest;
 import ru.lazarenko.warehouse.dto.registration.UserRegisterResponse;
 import ru.lazarenko.warehouse.entity.Role;
@@ -18,6 +20,7 @@ import ru.lazarenko.warehouse.service.mapper.UserMapper;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -39,7 +42,8 @@ public class UserService {
         role.setName(UserRole.MANAGER);
         newUser.setRoles(List.of(role));
 
-        userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
+        log.info("User successful created: {}", savedUser);
 
         return UserRegisterResponse.builder()
                 .message("User with login='%s' successfully created".formatted(newUser.getUsername()))
@@ -51,6 +55,12 @@ public class UserService {
     public User findUserById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoFoundElementException("User with id='%s' not found".formatted(id)));
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDto> getAllUsers() {
+        List<User> users = userRepository.findAllWithRoles();
+        return userMapper.toUserDtoList(users);
     }
 
     private boolean isExistUsername(String username) {

@@ -6,14 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.lazarenko.warehouse.dto.UserDto;
 import ru.lazarenko.warehouse.dto.registration.UserRegisterRequest;
 import ru.lazarenko.warehouse.dto.registration.UserRegisterResponse;
+import ru.lazarenko.warehouse.entity.Role;
 import ru.lazarenko.warehouse.entity.User;
 import ru.lazarenko.warehouse.exception.NoFoundElementException;
 import ru.lazarenko.warehouse.exception.UserUsernameExistException;
+import ru.lazarenko.warehouse.model.UserRole;
 import ru.lazarenko.warehouse.repository.UserRepository;
 import ru.lazarenko.warehouse.service.mapper.UserMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -121,5 +125,58 @@ class UserServiceTest {
 
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getUsername()).isEqualTo("user");
+    }
+
+    @Test
+    @DisplayName("get all users | empty result list | users do not exist")
+    void getAllUsers_emptyResultList_usersDoNotExist() {
+        when(userRepository.findAllWithRoles())
+                .thenReturn(List.of());
+
+        List<UserDto> result = underTest.getAllUsers();
+
+        verify(userRepository, times(1))
+                .findAllWithRoles();
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("get all users | not empty result list | users exist")
+    void getAllUsers_resultListNotEmpty_usersExist() {
+        Role roleAdmin = new Role();
+        roleAdmin.setName(UserRole.ADMIN);
+
+        Role roleManager = new Role();
+        roleManager.setName(UserRole.MANAGER);
+
+        User user = User.builder()
+                .id(1)
+                .username("admin")
+                .password("VjFSQ2ExSXlWblJVV0hCaFUwWndjVmxzV2taUFVUMDk=")
+                .roles(List.of(roleAdmin, roleManager))
+                .build();
+
+        UserDto userDto = UserDto.builder()
+                .id(1)
+                .username("admin")
+                .password("VjFSQ2ExSXlWblJVV0hCaFUwWndjVmxzV2taUFVUMDk=")
+                .roles(List.of(roleAdmin, roleManager))
+                .build();
+
+        when(userRepository.findAllWithRoles())
+                .thenReturn(List.of(user));
+
+        when(userMapper.toUserDtoList(anyList()))
+                .thenReturn(List.of(userDto));
+
+        List<UserDto> result = underTest.getAllUsers();
+
+        verify(userRepository, times(1))
+                .findAllWithRoles();
+
+        assertThat(result).isNotEmpty();
+        assertThat(result.get(0).getId()).isEqualTo(1);
+        assertThat(result.get(0).getUsername()).isEqualTo("admin");
     }
 }

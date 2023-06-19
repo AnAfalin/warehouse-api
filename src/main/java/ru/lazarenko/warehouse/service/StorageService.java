@@ -9,8 +9,6 @@ import ru.lazarenko.warehouse.dto.*;
 import ru.lazarenko.warehouse.dto.info.ResponseDto;
 import ru.lazarenko.warehouse.dto.product.ProductDto;
 import ru.lazarenko.warehouse.dto.storage.ChangeItemStorageRequest;
-import ru.lazarenko.warehouse.dto.storage.LoadingShipmentRequest;
-import ru.lazarenko.warehouse.dto.storage.LoadingShipmentResponse;
 import ru.lazarenko.warehouse.dto.storage.StorageDto;
 import ru.lazarenko.warehouse.entity.*;
 import ru.lazarenko.warehouse.exception.NoFoundElementException;
@@ -45,6 +43,7 @@ public class StorageService {
         storage.setRegion(region);
 
         Storage savedStorage = storageRepository.save(storage);
+        log.info("Storage successful created: {}", savedStorage);
 
         return ResponseDto.builder()
                 .status(HttpStatus.CREATED.name())
@@ -116,7 +115,7 @@ public class StorageService {
                 .build();
         operationHistoryService.saveOperationHistory(operationHistoryDto);
 
-        ItemStorage savedItem = itemStorageService.createItemAndGetSaved(foundItem);
+        ItemStorage savedItem = itemStorageService.updateItemAndGetSaved(foundItem);
 
         return ResponseDto.builder()
                 .status(HttpStatus.OK.name())

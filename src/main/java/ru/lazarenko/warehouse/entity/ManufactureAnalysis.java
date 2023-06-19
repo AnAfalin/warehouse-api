@@ -1,13 +1,14 @@
 package ru.lazarenko.warehouse.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.lazarenko.warehouse.model.ChangeType;
 import ru.lazarenko.warehouse.model.OperationType;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +24,8 @@ public class ManufactureAnalysis {
 
     @Enumerated(value = EnumType.STRING)
     private ChangeType changeType;
+
+    private LocalDate reportDate;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "product_id", referencedColumnName = "id")

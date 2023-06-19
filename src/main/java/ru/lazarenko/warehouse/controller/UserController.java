@@ -21,5 +21,4 @@ public class UserController {
     public UserRegisterResponse registrationUser(@Valid @RequestBody UserRegisterRequest request) {
         return userService.registerUser(request);
     }
-
 }

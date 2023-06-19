@@ -1,5 +1,6 @@
 package ru.lazarenko.warehouse.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
@@ -41,6 +43,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
                         List<Object> listMessage = new ArrayList<>(List.of(message));
                         listMessage.add(error.getDefaultMessage());
                         errors.put(field, listMessage);
+
+                        log.error(error.getDefaultMessage());
                     }
                 });
         response.put("errors", errors);
@@ -59,6 +63,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         response.put("status", HttpStatus.CONFLICT.name());
         response.put("message", ex.getMessage());
 
+        log.error(ex.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(response);
@@ -71,6 +77,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         response.put("status", HttpStatus.NOT_FOUND.name());
         response.put("message", ex.getMessage());
+
+        log.error(ex.getMessage());
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -85,6 +93,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         response.put("status", HttpStatus.BAD_REQUEST.name());
         response.put("message", ex.getMessage());
 
+        log.error(ex.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
@@ -97,6 +107,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.name());
         response.put("message", ex.getMessage());
+
+        log.error(ex.getMessage());
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

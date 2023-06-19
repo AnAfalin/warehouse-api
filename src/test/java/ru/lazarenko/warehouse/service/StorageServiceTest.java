@@ -583,7 +583,7 @@ class StorageServiceTest {
                 () -> underTest.decreaseProductInStorage(changeItemRequest));
 
         verify(itemStorageService, times(0))
-                .createItemAndGetSaved(any(ItemStorage.class));
+                .updateItemAndGetSaved(any(ItemStorage.class));
     }
 
     @Test
@@ -610,7 +610,7 @@ class StorageServiceTest {
                 () -> underTest.decreaseProductInStorage(changeItemRequest));
 
         verify(itemStorageService, times(0))
-                .createItemAndGetSaved(any(ItemStorage.class));
+                .updateItemAndGetSaved(any(ItemStorage.class));
     }
 
     @Test
@@ -639,7 +639,7 @@ class StorageServiceTest {
                 () -> underTest.decreaseProductInStorage(changeItemRequest));
 
         verify(itemStorageService, times(0))
-                .createItemAndGetSaved(any(ItemStorage.class));
+                .updateItemAndGetSaved(any(ItemStorage.class));
     }
 
     @Test
@@ -664,13 +664,13 @@ class StorageServiceTest {
         when(itemStorageService.getItemByProductIdAndStorageId(anyInt(), anyInt()))
                 .thenReturn(Optional.of(itemStorage));
 
-        when(itemStorageService.createItemAndGetSaved(any(ItemStorage.class)))
+        when(itemStorageService.updateItemAndGetSaved(any(ItemStorage.class)))
                 .thenReturn(itemStorage);
 
         ResponseDto result = underTest.decreaseProductInStorage(changeItemRequest);
 
         verify(itemStorageService, times(1))
-                .createItemAndGetSaved(any(ItemStorage.class));
+                .updateItemAndGetSaved(any(ItemStorage.class));
 
         assertThat(result.getMessage())
                 .isEqualTo("Total count of product with id='1' on storage with id='1': 140");

@@ -8,6 +8,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import ru.lazarenko.warehouse.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,5 +41,22 @@ class UserRepositoryTest {
         Optional<User> optionalResult = underTest.findByUsername(username);
 
         assertThat(optionalResult).isEmpty();
+    }
+
+    @Test
+    @DisplayName("find all with roles | optional not empty | user exists")
+    void findAllWithRoles_optionalNotEmpty_userExists() {
+        List<User> result = underTest.findAllWithRoles();
+
+        assertThat(result).isNotEmpty();
+        assertThat(result.get(0).getUsername()).isEqualTo("admin");
+        assertThat(result.get(0).getId()).isEqualTo(1);
+        assertThat(result.get(0).getRoles().size()).isEqualTo(2);
+        assertThat(result.get(0).getRoles().stream()
+                .filter(el -> el.getName().name().equals("ADMIN")).findFirst())
+                .isNotEmpty();
+        assertThat(result.get(0).getRoles().stream()
+                .filter(el -> el.getName().name().equals("MANAGER")).findFirst())
+                .isNotEmpty();
     }
 }

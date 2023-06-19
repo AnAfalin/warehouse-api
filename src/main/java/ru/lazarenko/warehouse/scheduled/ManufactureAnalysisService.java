@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.lazarenko.warehouse.dto.ReportDto;
 import ru.lazarenko.warehouse.entity.ManufactureAnalysis;
 import ru.lazarenko.warehouse.entity.OperationHistory;
 import ru.lazarenko.warehouse.entity.Product;
@@ -13,8 +14,13 @@ import ru.lazarenko.warehouse.model.ChangeType;
 import ru.lazarenko.warehouse.model.OperationType;
 import ru.lazarenko.warehouse.repository.ManufactureAnalysisRepository;
 import ru.lazarenko.warehouse.repository.OperationHistoryRepository;
+import ru.lazarenko.warehouse.service.mapper.ProductMapper;
+import ru.lazarenko.warehouse.service.mapper.ReportMapper;
+import ru.lazarenko.warehouse.service.mapper.StorageMapper;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +30,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class ManufactureAnalysisService {
     private final ManufactureAnalysisRepository manufactureAnalysisRepository;
-
     private final OperationHistoryRepository operationHistoryRepository;
+    private final ReportMapper reportMapper;
 
     @Value("${my.scheduler.period-report-analyses}")
     private Long periodReportAnalyses;
@@ -42,6 +48,13 @@ public class ManufactureAnalysisService {
         List<ManufactureAnalysis> result = makeAnalysis(sliceData);
 
         manufactureAnalysisRepository.saveAll(result);
+    }
+
+    public List<ReportDto> getReport() {
+        LocalDate from = getDatePreviousMonday();
+        LocalDate to = LocalDate.now();
+        List<ManufactureAnalysis> result = manufactureAnalysisRepository.findAllByReportDateInPeriod(from, to);
+        return reportMapper.toReportDtoList(result);
     }
 
     private List<OperationHistory> makeDataSlice() {
@@ -98,6 +111,7 @@ public class ManufactureAnalysisService {
                 .storage(storage)
                 .operation(OperationType.LOADING)
                 .changeType(ChangeType.DECREASE)
+                .reportDate(LocalDate.now())
                 .build();
         result.add(notice);
     }
@@ -108,7 +122,19 @@ public class ManufactureAnalysisService {
                 .storage(storage)
                 .operation(OperationType.LOADING)
                 .changeType(ChangeType.INCREASE)
+                .reportDate(LocalDate.now())
                 .build();
         result.add(notice);
+    }
+
+    private LocalDate getDatePreviousMonday() {
+        LocalDate today = LocalDate.now();
+        LocalDate previousMonday = today.with(DayOfWeek.MONDAY);
+
+        if (previousMonday.isAfter(today)) {
+            previousMonday = previousMonday.minusWeeks(1);
+        }
+
+        return previousMonday;
     }
 }

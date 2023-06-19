@@ -32,18 +32,19 @@ public class StorageController {
         return storageService.createStorage(request);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping
     public List<StorageDto> getAllStorages() {
         return storageService.getAllStorages();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/add-product")
     public ResponseDto addProductToStorage(@RequestBody @Valid ChangeItemStorageRequest request) {
         return storageService.increaseProductInStorage(request);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/decrease-product")
     public ResponseDto decreaseProductToStorage(@RequestBody @Valid ChangeItemStorageRequest request) {
         return storageService.decreaseProductInStorage(request);

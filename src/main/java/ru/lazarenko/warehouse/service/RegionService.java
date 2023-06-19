@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class RegionService {
     private final RegionRepository regionRepository;
     private final RegionMapper regionMapper;

@@ -238,7 +238,7 @@ class ItemStorageServiceTest {
         when(itemStorageRepository.save(any(ItemStorage.class)))
                 .thenReturn(itemStorage);
 
-        ItemStorage result = underTest.createItemAndGetSaved(itemStorage);
+        ItemStorage result = underTest.updateItemAndGetSaved(itemStorage);
 
         verify(itemStorageRepository, times(1))
                 .save(any(ItemStorage.class));
